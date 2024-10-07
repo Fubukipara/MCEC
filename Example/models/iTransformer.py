@@ -59,6 +59,8 @@ class Model(nn.Module):
         x_enc /= stdev
 
         _, _, N = x_enc.shape
+
+        input = x_enc.clone()
         
         if self.MCEC:
             x_enc = x_enc + self.MCEC.enforce(x_enc)
@@ -70,7 +72,9 @@ class Model(nn.Module):
         dec_out = self.projection(enc_out).permute(0, 2, 1)[:, :, :N]
         
         if self.MCEC:
-            dec_out = dec_out + self.MCEC.correct(dec_out)
+            dec_out_dev = dec_out[:,:] - input[:,-1].unsqueeze(1)
+            dec_out_dev = dec_out_dev + self.MCEC.correct(dec_out_dev)
+            dec_out = dec_out_dev[:,:,:] + input[:,-1].unsqueeze(1)
         # De-Normalization from Non-stationary Transformer
         dec_out = dec_out * (stdev[:, 0, :].unsqueeze(1).repeat(1, self.pred_len, 1))
         dec_out = dec_out + (means[:, 0, :].unsqueeze(1).repeat(1, self.pred_len, 1))
