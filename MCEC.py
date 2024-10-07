@@ -37,7 +37,7 @@ class MCEC(nn.Module):
             
         # Initialize linear layers
         self.enforce_linear1 = nn.Linear(self.enc_in, self.hidden_dim)
-        self.enforce_linear2 = nn.Linear(self.hidden_dim, self.enc_in)
+        # self.enforce_linear2 = nn.Linear(self.hidden_dim, self.enc_in)
         self.correct_linear1 = nn.Linear(self.enc_in, self.hidden_dim)
         self.correct_linear2 = nn.Linear(self.hidden_dim, self.enc_in)
             
@@ -46,11 +46,11 @@ class MCEC(nn.Module):
         if self.norm_methood:
             x = self.enforce_norm_layer(x)
         
-        x = self.activation(self.enforce_linear1(x))
+        x = nn.ReLU(self.enforce_linear1(x))
         
         x = nn.Dropout(p=self.dropout)(x)
         
-        x = self.enforce_linear2(x)
+        #x = self.enforce_linear2(x)
         
         return x
         
