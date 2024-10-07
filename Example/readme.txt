@@ -1,4 +1,4 @@
-The exmple of how to use the MCEC module to make weather time series prediction.
+The exmple of how to use the MCEC module to make weather time series prediction on iTransformer.
 
 The code of backbone and dataset are cited and sourced from this open-source library:
 
